@@ -26,7 +26,6 @@ export const SvgStage: React.FC<Props> = ({ svgRef }) => {
   const selection = useUIStore((s) => s.selection);
   const tool = useUIStore((s) => s.tool);
   const viewBox = useUIStore((s) => s.viewBox);
-  const setViewBox = useUIStore((s) => s.setViewBox);
   const snapToGrid = useUIStore((s) => s.snapToGrid);
   const setSelection = useUIStore((s) => s.setSelection);
   const toggleSelection = useUIStore((s) => s.toggleSelection);
@@ -68,7 +67,6 @@ export const SvgStage: React.FC<Props> = ({ svgRef }) => {
       drawingOriginX,
       drawingOriginY,
       canvas.worldUnitsPerInch,
-      handleElementPointerDown
     );
 
   // ── Zoom via scroll wheel ────────────────────────────────────────────────

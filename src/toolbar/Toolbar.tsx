@@ -260,10 +260,10 @@ export const Toolbar: React.FC<Props> = ({ svgRef }) => {
       />
 
       <div style={{ borderTop: '1px solid #eee', margin: '2px 0' }} />
-      <button onClick={undo} title="Undo (Cmd+Z)" style={actionBtnStyle}>
+      <button onClick={() => undo()} title="Undo (Cmd+Z)" style={actionBtnStyle}>
         Undo
       </button>
-      <button onClick={redo} title="Redo (Cmd+Shift+Z)" style={actionBtnStyle}>
+      <button onClick={() => redo()} title="Redo (Cmd+Shift+Z)" style={actionBtnStyle}>
         Redo
       </button>
 

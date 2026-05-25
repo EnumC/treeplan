@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { SvgStage } from './canvas/SvgStage';
 import { Toolbar } from './toolbar/Toolbar';
 import { Inspector } from './toolbar/Inspector';

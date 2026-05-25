@@ -118,7 +118,7 @@ export interface LegendOverride {
 // ---- Top-level document ----
 
 export interface SitePlanDocument {
-  schemaVersion: 1;
+  schemaVersion: 2;
   id: string; // nanoid; stable across saves
   createdAt: string; // ISO
   updatedAt: string; // ISO; bumped on every commit

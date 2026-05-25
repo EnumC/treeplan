@@ -34,5 +34,5 @@ export function migrate(raw: unknown): SitePlanDocument {
       `File is newer (v${version}) than this app (v${CURRENT_SCHEMA_VERSION}). Update the app.`
     );
   }
-  return doc as SitePlanDocument;
+  return doc as unknown as SitePlanDocument;
 }

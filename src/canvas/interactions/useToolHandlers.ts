@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { useDocumentStore } from '@/store/useDocumentStore';
 import { useUIStore, BOX_FILL_MAP, TREE_SUBTYPE_MAP } from '@/store/useUIStore';
 import { clientToWorld, marqueeIntersects } from '@/types/geometry';
-import type { ElementId, SiteElement, BoxElement, TreeElement, TextElement, DimensionElement } from '@/types/document';
+import type { SiteElement, BoxElement, TreeElement, TextElement, DimensionElement } from '@/types/document';
 import { isBox, isTree, isText, isPoly, isDimension } from '@/types/document';
 
 export function useToolHandlers(
@@ -11,11 +11,10 @@ export function useToolHandlers(
   drawingOriginX: number,
   drawingOriginY: number,
   worldUnitsPerInch: number,
-  onElementPointerDown: (e: React.PointerEvent, id: ElementId) => void
 ) {
   const tool = useUIStore((s) => s.tool);
-  const { setTool, setSelection, clearSelection, setMarquee, addToSelection, setEditingText } = useUIStore();
-  const { addElement, removeElements, document: doc, updateElementTransient, commitTransform } = useDocumentStore();
+  const { setTool, setSelection, clearSelection, setMarquee, setEditingText } = useUIStore();
+  const { addElement, document: doc, updateElementTransient, commitTransform } = useDocumentStore();
   const elements = doc.elements;
   const gridSpacing = doc.canvas.gridSpacing;
   const snapToGrid = useUIStore((s) => s.snapToGrid);

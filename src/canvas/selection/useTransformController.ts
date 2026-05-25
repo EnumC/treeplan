@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useDocumentStore } from '@/store/useDocumentStore';
-import { useUIStore } from '@/store/useUIStore';
 import { clientToWorld } from '@/types/geometry';
 import type { ElementId, SiteElement, BoxElement, TreeElement, TextElement, PolyElement, DimensionElement } from '@/types/document';
 import { isBox, isTree, isText, isPoly, isDimension } from '@/types/document';
