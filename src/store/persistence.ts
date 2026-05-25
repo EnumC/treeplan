@@ -46,7 +46,7 @@ export function initPersistence() {
 }
 
 function hydrateFallback() {
-  fetch('/default.siteplan')
+  fetch(`${import.meta.env.BASE_URL}default.siteplan`)
     .then((res) => {
       if (!res.ok) throw new Error('not found');
       return res.text();
