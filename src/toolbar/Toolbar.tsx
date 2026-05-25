@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useUIStore } from '@/store/useUIStore';
 import { useDocumentStore } from '@/store/useDocumentStore';
-import { downloadProject } from '@/io/saveProject';
+import { downloadProject, slug } from '@/io/saveProject';
 import { loadProjectFromFile } from '@/io/loadProject';
 import { exportPng } from '@/io/exportPng';
 import { exportPdf } from '@/io/exportPdf';
@@ -77,25 +77,19 @@ export const Toolbar: React.FC<Props> = ({ svgRef }) => {
   function handleExport() {
     const svg = svgRef.current;
     if (!svg) return;
-    const slug =
-      doc.title.projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-') ||
-      'site-plan';
     exportPng(svg, {
       dpi: doc.canvas.dpiForExport,
       paperWidthIn: doc.canvas.widthIn,
       paperHeightIn: doc.canvas.heightIn,
-      filename: `${slug}.png`,
+      filename: `${slug(doc.title.projectName)}.png`,
     }).catch(console.error);
   }
 
   function handleExportPdf() {
     const svg = svgRef.current;
     if (!svg) return;
-    const slug =
-      doc.title.projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-') ||
-      'site-plan';
     exportPdf(svg, doc, {
-      filename: `${slug}.pdf`,
+      filename: `${slug(doc.title.projectName)}.pdf`,
     }).catch(console.error);
   }
 

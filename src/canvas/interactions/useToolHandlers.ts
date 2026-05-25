@@ -60,8 +60,7 @@ export function useToolHandlers(
     return { x: 0, y: 0, w: 1, h: 1 };
   }
 
-  // Marquee drag state (transient ref in closure)
-  let marqueeStart: { x: number; y: number } | null = null;
+  const marqueeStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const onCanvasPointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -72,7 +71,7 @@ export function useToolHandlers(
         // Shift+drag is pan (handled by SVG-level pointer handler); let it bubble.
         if (e.shiftKey) return;
         // Start marquee
-        marqueeStart = { x: pt.x, y: pt.y };
+        marqueeStartRef.current = { x: pt.x, y: pt.y };
         setMarquee({ x: pt.x, y: pt.y, w: 0, h: 0 });
         (e.currentTarget as Element).setPointerCapture(e.pointerId);
         return;
@@ -175,13 +174,13 @@ export function useToolHandlers(
         return;
       }
 
-      if (tool !== 'select' || !marqueeStart) return;
+      if (tool !== 'select' || !marqueeStartRef.current) return;
       const pt = getWorldPoint(e);
       setMarquee({
-        x: marqueeStart.x,
-        y: marqueeStart.y,
-        w: pt.x - marqueeStart.x,
-        h: pt.y - marqueeStart.y,
+        x: marqueeStartRef.current.x,
+        y: marqueeStartRef.current.y,
+        w: pt.x - marqueeStartRef.current.x,
+        h: pt.y - marqueeStartRef.current.y,
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -237,7 +236,7 @@ export function useToolHandlers(
           if (!e.shiftKey) clearSelection();
         }
       }
-      marqueeStart = null;
+      marqueeStartRef.current = null;
       setMarquee(null);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

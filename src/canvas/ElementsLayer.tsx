@@ -1,10 +1,9 @@
+import { useMemo } from 'react';
 import type React from 'react';
 import { useDocumentStore } from '@/store/useDocumentStore';
 import { useUIStore } from '@/store/useUIStore';
 import { ElementView } from './ElementView';
 import type { ElementId, SiteElement } from '@/types/document';
-import { isTree, isBox, isText } from '@/types/document';
-import { clientToWorld } from '@/types/geometry';
 
 interface Props {
   svgRef: React.RefObject<SVGSVGElement | null>;
@@ -23,13 +22,13 @@ export const ElementsLayer: React.FC<Props> = ({
   const editingTextId = useUIStore((s) => s.editingTextId);
   const setHovered = useUIStore((s) => s.setHovered);
 
-  // Merge transient patches for display
-  const displayElements: SiteElement[] = elements.map((el) => {
-    const patch = transientPatches.get(el.id);
-    return patch ? ({ ...el, ...patch } as SiteElement) : el;
-  });
-
-  const sorted = [...displayElements].sort((a, b) => a.z - b.z);
+  const sorted = useMemo(() => {
+    const merged: SiteElement[] = elements.map((el) => {
+      const patch = transientPatches.get(el.id);
+      return patch ? ({ ...el, ...patch } as SiteElement) : el;
+    });
+    return merged.slice().sort((a, b) => a.z - b.z);
+  }, [elements, transientPatches]);
 
   return (
     <g>

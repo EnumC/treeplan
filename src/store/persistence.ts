@@ -13,23 +13,23 @@ function hydrateFromRaw(raw: string) {
 }
 
 function subscribeForAutosave() {
-  useDocumentStore.subscribe((state) => {
-    if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      try {
-        localStorage.setItem(
-          AUTOSAVE_KEY,
-          JSON.stringify(state.document)
-        );
-        localStorage.setItem(
-          AUTOSAVE_META_KEY,
-          JSON.stringify({ savedAt: new Date().toISOString() })
-        );
-      } catch {
-        // localStorage full or disabled — silently ignore
-      }
-    }, 500);
-  });
+  useDocumentStore.subscribe(
+    (state) => state.document,
+    (document) => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        try {
+          localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(document));
+          localStorage.setItem(
+            AUTOSAVE_META_KEY,
+            JSON.stringify({ savedAt: new Date().toISOString() })
+          );
+        } catch {
+          // localStorage full or disabled — silently ignore
+        }
+      }, 500);
+    }
+  );
 }
 
 export function initPersistence() {

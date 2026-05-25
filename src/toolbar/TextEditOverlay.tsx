@@ -4,6 +4,7 @@ import { useDocumentStore } from '@/store/useDocumentStore';
 import { useUIStore } from '@/store/useUIStore';
 import { isText, isDimension } from '@/types/document';
 import type { DimensionElement } from '@/types/document';
+import { chromeLayout } from '@/chrome/chromeLayout';
 
 interface Props {
   svgRef: React.RefObject<SVGSVGElement | null>;
@@ -37,7 +38,9 @@ export const TextEditOverlay: React.FC<Props> = ({ svgRef }) => {
   if (!ctm) return null;
 
   const canvas = doc.canvas;
-  const layout = { drawingOriginX: 0.25, drawingOriginY: 0.25 }; // approximate
+  const { drawingArea } = chromeLayout(canvas);
+  const drawingOriginX = drawingArea.x;
+  const drawingOriginY = drawingArea.y;
   const scaleX = ctm.a / canvas.worldUnitsPerInch;
   const scaleY = ctm.d / canvas.worldUnitsPerInch;
 
@@ -48,8 +51,8 @@ export const TextEditOverlay: React.FC<Props> = ({ svgRef }) => {
   let fontWeight: string;
 
   if (textEl) {
-    screenX = ctm.e + (layout.drawingOriginX + textEl.x / canvas.worldUnitsPerInch) * ctm.a;
-    screenY = ctm.f + (layout.drawingOriginY + textEl.y / canvas.worldUnitsPerInch) * ctm.d;
+    screenX = ctm.e + (drawingOriginX + textEl.x / canvas.worldUnitsPerInch) * ctm.a;
+    screenY = ctm.f + (drawingOriginY + textEl.y / canvas.worldUnitsPerInch) * ctm.d;
     fontSize = textEl.fontSize * scaleY;
     defaultValue = textEl.text;
     fontWeight = textEl.weight;
@@ -62,8 +65,8 @@ export const TextEditOverlay: React.FC<Props> = ({ svgRef }) => {
     const perpY = Math.cos(angle);
     const mx = (dimEl!.x + dimEl!.x2) / 2 + perpX * 3.5;
     const my = (dimEl!.y + dimEl!.y2) / 2 + perpY * 3.5;
-    screenX = ctm.e + (layout.drawingOriginX + mx / canvas.worldUnitsPerInch) * ctm.a;
-    screenY = ctm.f + (layout.drawingOriginY + my / canvas.worldUnitsPerInch) * ctm.d;
+    screenX = ctm.e + (drawingOriginX + mx / canvas.worldUnitsPerInch) * ctm.a;
+    screenY = ctm.f + (drawingOriginY + my / canvas.worldUnitsPerInch) * ctm.d;
     fontSize = 3.5 * scaleY;
     defaultValue = dimEl!.label;
     fontWeight = 'normal';

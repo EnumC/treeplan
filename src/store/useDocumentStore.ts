@@ -247,7 +247,7 @@ interface DocumentActions {
   updateElement: (id: ElementId, patch: Partial<SiteElement>) => void;
   addElement: (el: SiteElement) => void;
   removeElements: (ids: ElementId[]) => void;
-  duplicateElements: (ids: ElementId[]) => void;
+  duplicateElements: (ids: ElementId[]) => ElementId[];
   updateTitle: (patch: Partial<SitePlanDocument['title']>) => void;
   updateNotes: (patch: Partial<SitePlanDocument['notes']>) => void;
   updateCanvas: (patch: Partial<SitePlanDocument['canvas']>) => void;

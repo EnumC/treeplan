@@ -1,6 +1,7 @@
 import type React from 'react';
 import type { BoxElement } from '@/types/document';
 import { FILL_REGISTRY } from '@/fills/registry';
+import { labelFontSize } from '@/types/geometry';
 
 interface Props {
   el: BoxElement;
@@ -25,7 +26,7 @@ export const BoxView: React.FC<Props> = ({
 
   const strokeColor = el.stroke ?? '#222';
   const strokeWidth = el.strokeWidth ?? 0.5;
-  const labelFontSize = Math.min(el.w, el.h) * 0.08;
+  const fontSize = labelFontSize(el.w, el.h);
 
   return (
     <g
@@ -53,7 +54,7 @@ export const BoxView: React.FC<Props> = ({
           textAnchor="middle"
           dominantBaseline="middle"
           fontFamily="'Arial', 'Helvetica', sans-serif"
-          fontSize={Math.max(labelFontSize, 1.5)}
+          fontSize={fontSize}
           fontWeight="bold"
           fill="#fff"
           stroke="#333"

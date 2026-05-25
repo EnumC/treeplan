@@ -1,6 +1,7 @@
 import type React from 'react';
 import type { PolyElement } from '@/types/document';
 import { FILL_REGISTRY } from '@/fills/registry';
+import { labelFontSize } from '@/types/geometry';
 
 interface Props {
   el: PolyElement;
@@ -34,12 +35,11 @@ export const PolyView: React.FC<Props> = ({
   const cx = el.points.reduce((s, p) => s + p.x, 0) / el.points.length;
   const cy = el.points.reduce((s, p) => s + p.y, 0) / el.points.length;
 
-  // Approximate font size from rough bounding box
   const xs = el.points.map((p) => p.x);
   const ys = el.points.map((p) => p.y);
   const bw = Math.max(...xs) - Math.min(...xs);
   const bh = Math.max(...ys) - Math.min(...ys);
-  const labelFontSize = Math.max(1.5, Math.min(bw, bh) * 0.08);
+  const fontSize = labelFontSize(bw, bh);
 
   return (
     <g
@@ -62,7 +62,7 @@ export const PolyView: React.FC<Props> = ({
           textAnchor="middle"
           dominantBaseline="middle"
           fontFamily="'Arial', 'Helvetica', sans-serif"
-          fontSize={labelFontSize}
+          fontSize={fontSize}
           fontWeight="bold"
           fill="#fff"
           stroke="#333"

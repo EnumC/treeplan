@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { useDocumentStore } from '@/store/useDocumentStore';
 import { useUIStore } from '@/store/useUIStore';
-import { downloadProject } from '@/io/saveProject';
+import { downloadProject, slug } from '@/io/saveProject';
 import { exportPng } from '@/io/exportPng';
 import { exportPdf } from '@/io/exportPdf';
 import { useStore } from 'zustand';
+import { isPoly, isDimension } from '@/types/document';
 
 export function useKeyboard(svgRef: React.RefObject<SVGSVGElement | null>) {
   const { undo, redo } = useStore(useDocumentStore.temporal);
@@ -68,14 +69,11 @@ export function useKeyboard(svgRef: React.RefObject<SVGSVGElement | null>) {
         const doc = useDocumentStore.getState().document;
         const svg = svgRef.current;
         if (svg) {
-          const slug = doc.title.projectName
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-') || 'site-plan';
           exportPng(svg, {
             dpi: doc.canvas.dpiForExport,
             paperWidthIn: doc.canvas.widthIn,
             paperHeightIn: doc.canvas.heightIn,
-            filename: `${slug}.png`,
+            filename: `${slug(doc.title.projectName)}.png`,
           }).catch(console.error);
         }
       }
@@ -86,11 +84,8 @@ export function useKeyboard(svgRef: React.RefObject<SVGSVGElement | null>) {
         const doc = useDocumentStore.getState().document;
         const svg = svgRef.current;
         if (svg) {
-          const slug = doc.title.projectName
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-') || 'site-plan';
           exportPdf(svg, doc, {
-            filename: `${slug}.pdf`,
+            filename: `${slug(doc.title.projectName)}.pdf`,
           }).catch(console.error);
         }
       }
@@ -101,8 +96,8 @@ export function useKeyboard(svgRef: React.RefObject<SVGSVGElement | null>) {
         const sel = [...useUIStore.getState().selection];
         if (sel.length > 0) {
           const store = useDocumentStore.getState();
-          const newIds = store.duplicateElements(sel) as unknown as string[];
-          if (Array.isArray(newIds)) {
+          const newIds = store.duplicateElements(sel);
+          if (newIds.length > 0) {
             useUIStore.getState().setSelection(newIds);
           }
         }
@@ -122,7 +117,21 @@ export function useKeyboard(svgRef: React.RefObject<SVGSVGElement | null>) {
         const store = useDocumentStore.getState();
         for (const id of sel) {
           const el = store.document.elements.find((e) => e.id === id);
-          if (el) {
+          if (!el) continue;
+          if (isPoly(el)) {
+            store.updateElement(id, {
+              x: el.x + dx,
+              y: el.y + dy,
+              points: el.points.map((p) => ({ x: p.x + dx, y: p.y + dy })),
+            });
+          } else if (isDimension(el)) {
+            store.updateElement(id, {
+              x: el.x + dx,
+              y: el.y + dy,
+              x2: el.x2 + dx,
+              y2: el.y2 + dy,
+            });
+          } else {
             store.updateElement(id, { x: el.x + dx, y: el.y + dy });
           }
         }

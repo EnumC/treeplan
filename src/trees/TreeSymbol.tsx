@@ -15,6 +15,35 @@ function hash(s: string): number {
   return Math.abs(h);
 }
 
+function DeciduousCanopy({ r, dashed }: { r: number; dashed: boolean }) {
+  return (
+    <>
+      <path
+        d={bumpyCloudPath(r, 16)}
+        fill="#3e5432"
+        stroke="#1a2812"
+        strokeWidth={r * 0.1}
+        strokeLinejoin="round"
+        strokeDasharray={dashed ? `${r * 0.22} ${r * 0.1}` : undefined}
+      />
+      <path d={bumpyCloudPath(r * 0.88, 14)} fill="#7a9268"/>
+      <g transform={`translate(${-r * 0.12} ${-r * 0.16})`}>
+        <path d={bumpyCloudPath(r * 0.44, 9)} fill="#96aa7c"/>
+      </g>
+      <g transform={`translate(${r * 0.22} ${r * 0.08})`}>
+        <path d={bumpyCloudPath(r * 0.38, 8)} fill="#92a678"/>
+      </g>
+      <g transform={`translate(${-r * 0.2} ${r * 0.22})`}>
+        <path d={bumpyCloudPath(r * 0.34, 7)} fill="#96aa7c"/>
+      </g>
+      <g transform={`translate(${r * 0.08} ${-r * 0.28})`}>
+        <path d={bumpyCloudPath(r * 0.30, 7)} fill="#92a678"/>
+      </g>
+      <circle r={r * 0.07} fill="#4a2e14"/>
+    </>
+  );
+}
+
 function bumpyCloudPath(r: number, lobes: number): string {
   // Create a bumpy cloud silhouette from arc segments
   let d = '';
@@ -44,58 +73,14 @@ export const TreeSymbol: React.FC<Props> = ({ subtype, radius: r, seed }) => {
     case 'existing-tree':
       return (
         <g filter="url(#tree-shadow)">
-          {/* Outer scalloped silhouette — dark ring + dashed stroke */}
-          <path
-            d={bumpyCloudPath(r, 16)}
-            fill="#3e5432"
-            stroke="#1a2812"
-            strokeWidth={r * 0.1}
-            strokeLinejoin="round"
-            strokeDasharray={`${r * 0.22} ${r * 0.1}`}
-          />
-          {/* Main canopy — muted sage green */}
-          <path d={bumpyCloudPath(r * 0.88, 14)} fill="#7a9268"/>
-          {/* Inner leaf-cluster blobs — slightly lighter, scattered */}
-          <g transform={`translate(${-r * 0.12} ${-r * 0.16})`}>
-            <path d={bumpyCloudPath(r * 0.44, 9)} fill="#96aa7c"/>
-          </g>
-          <g transform={`translate(${r * 0.22} ${r * 0.08})`}>
-            <path d={bumpyCloudPath(r * 0.38, 8)} fill="#92a678"/>
-          </g>
-          <g transform={`translate(${-r * 0.2} ${r * 0.22})`}>
-            <path d={bumpyCloudPath(r * 0.34, 7)} fill="#96aa7c"/>
-          </g>
-          <g transform={`translate(${r * 0.08} ${-r * 0.28})`}>
-            <path d={bumpyCloudPath(r * 0.30, 7)} fill="#92a678"/>
-          </g>
-          <circle r={r * 0.07} fill="#4a2e14"/>
+          <DeciduousCanopy r={r} dashed={true} />
         </g>
       );
 
     case 'proposed-tree':
       return (
         <g filter="url(#tree-shadow)">
-          <path
-            d={bumpyCloudPath(r, 16)}
-            fill="#3e5432"
-            stroke="#1a2812"
-            strokeWidth={r * 0.1}
-            strokeLinejoin="round"
-          />
-          <path d={bumpyCloudPath(r * 0.88, 14)} fill="#7a9268"/>
-          <g transform={`translate(${-r * 0.12} ${-r * 0.16})`}>
-            <path d={bumpyCloudPath(r * 0.44, 9)} fill="#96aa7c"/>
-          </g>
-          <g transform={`translate(${r * 0.22} ${r * 0.08})`}>
-            <path d={bumpyCloudPath(r * 0.38, 8)} fill="#92a678"/>
-          </g>
-          <g transform={`translate(${-r * 0.2} ${r * 0.22})`}>
-            <path d={bumpyCloudPath(r * 0.34, 7)} fill="#96aa7c"/>
-          </g>
-          <g transform={`translate(${r * 0.08} ${-r * 0.28})`}>
-            <path d={bumpyCloudPath(r * 0.30, 7)} fill="#92a678"/>
-          </g>
-          <circle r={r * 0.07} fill="#4a2e14"/>
+          <DeciduousCanopy r={r} dashed={false} />
         </g>
       );
 
@@ -159,31 +144,9 @@ export const TreeSymbol: React.FC<Props> = ({ subtype, radius: r, seed }) => {
       );
 
     case 'removing-tree':
-      // Existing tree with a bold red X — signals removal on the plan
       return (
         <g filter="url(#tree-shadow)">
-          <path
-            d={bumpyCloudPath(r, 16)}
-            fill="#3e5432"
-            stroke="#1a2812"
-            strokeWidth={r * 0.1}
-            strokeLinejoin="round"
-            strokeDasharray={`${r * 0.22} ${r * 0.1}`}
-          />
-          <path d={bumpyCloudPath(r * 0.88, 14)} fill="#7a9268"/>
-          <g transform={`translate(${-r * 0.12} ${-r * 0.16})`}>
-            <path d={bumpyCloudPath(r * 0.44, 9)} fill="#96aa7c"/>
-          </g>
-          <g transform={`translate(${r * 0.22} ${r * 0.08})`}>
-            <path d={bumpyCloudPath(r * 0.38, 8)} fill="#92a678"/>
-          </g>
-          <g transform={`translate(${-r * 0.2} ${r * 0.22})`}>
-            <path d={bumpyCloudPath(r * 0.34, 7)} fill="#96aa7c"/>
-          </g>
-          <g transform={`translate(${r * 0.08} ${-r * 0.28})`}>
-            <path d={bumpyCloudPath(r * 0.30, 7)} fill="#92a678"/>
-          </g>
-          <circle r={r * 0.07} fill="#4a2e14"/>
+          <DeciduousCanopy r={r} dashed={true} />
           <line
             x1={-r * 0.62} y1={-r * 0.62}
             x2={r * 0.62} y2={r * 0.62}

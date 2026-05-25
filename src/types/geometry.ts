@@ -127,6 +127,11 @@ function satOverlap(poly1: Point[], poly2: Point[]): boolean {
   return true;
 }
 
+/** Label font size in world feet, proportional to the bounding box with a minimum floor. */
+export function labelFontSize(w: number, h: number): number {
+  return Math.max(1.5, Math.min(w, h) * 0.08);
+}
+
 /** Does this marquee rect intersect this element's rotated bounds using SAT? */
 export function marqueeIntersects(
   marquee: Rect,

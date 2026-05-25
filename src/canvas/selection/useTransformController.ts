@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useDocumentStore } from '@/store/useDocumentStore';
 import { useUIStore } from '@/store/useUIStore';
 import { clientToWorld } from '@/types/geometry';
@@ -240,11 +240,8 @@ export function useTransformController(
       const state = dragState.current;
       if (!state) return;
 
-      // Commit all changes from transient patches
-      const patches = state.ids.map((id) => {
-        const el = elements.find((e) => e.id === id);
-        return { id, patch: el ? {} : {} };
-      });
+      // Commit all transient patches accumulated during the drag
+      const patches = state.ids.map((id) => ({ id, patch: {} as Partial<SiteElement> }));
       commitTransform(patches);
 
       dragState.current = null;
@@ -262,8 +259,19 @@ export function useTransformController(
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [elements]
+    [onPointerMove]
   );
+
+  // Remove any window listeners left over if the component unmounts mid-drag
+  useEffect(() => {
+    return () => {
+      if (dragState.current) {
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+        dragState.current = null;
+      }
+    };
+  }, [onPointerMove, onPointerUp]);
 
   function startMove(e: React.PointerEvent, ids: ElementId[]) {
     e.stopPropagation();

@@ -13,12 +13,13 @@ export const Grid: React.FC<Props> = ({ canvas, drawingW, drawingH }) => {
   const spacing = canvas.gridSpacing;
   const totalW = drawingW * canvas.worldUnitsPerInch;
   const totalH = drawingH * canvas.worldUnitsPerInch;
+  const patternId = `grid-pattern-${spacing}`;
 
   return (
     <g className="editor-only">
       <defs>
         <pattern
-          id="grid-pattern"
+          id={patternId}
           width={spacing}
           height={spacing}
           patternUnits="userSpaceOnUse"
@@ -37,7 +38,7 @@ export const Grid: React.FC<Props> = ({ canvas, drawingW, drawingH }) => {
         y={0}
         width={totalW}
         height={totalH}
-        fill="url(#grid-pattern)"
+        fill={`url(#${patternId})`}
       />
     </g>
   );

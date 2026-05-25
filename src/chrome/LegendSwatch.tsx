@@ -12,6 +12,7 @@ interface Props {
 export const LegendSwatch: React.FC<Props> = ({ entry, mode }) => {
   if (entry.kind === 'fill') {
     const def = FILL_REGISTRY[entry.payload as FillType];
+    if (!def) return null;
     if (mode === 'inline') {
       return (
         <rect

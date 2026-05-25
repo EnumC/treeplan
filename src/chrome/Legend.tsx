@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type React from 'react';
 import type { SitePlanDocument } from '@/types/document';
 import type { Rect } from '@/types/geometry';
@@ -10,7 +11,7 @@ interface Props {
 }
 
 export const Legend: React.FC<Props> = ({ doc, rect }) => {
-  const entries = buildLegend(doc);
+  const entries = useMemo(() => buildLegend(doc), [doc.elements, doc.legendOverrides]);
   const { x, y, w, h } = rect;
   const fontSize = 0.155;
   const rowH = 0.33;

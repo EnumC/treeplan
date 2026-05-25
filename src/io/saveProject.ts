@@ -1,6 +1,6 @@
 import type { SitePlanDocument } from '@/types/document';
 
-function slug(s: string): string {
+export function slug(s: string): string {
   return s
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
