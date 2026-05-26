@@ -1,73 +1,82 @@
-# React + TypeScript + Vite
+# treeplan
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A browser-based site plan drawing tool for landscape and architectural sketches. Draw area fills, place tree symbols, add dimension callouts, and export print-ready PDFs or PNGs with no installation required.
 
-Currently, two official plugins are available:
+![Screenshot](src/assets/screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **SVG canvas** with pan, zoom, snap-to-grid, and z-order stacking
+- **Area tools** for drawing rectangles with fill patterns: Building, Concrete, Paver, Lawn, Mulch, Water
+- **Polygon merge** to combine two or more boxes into a freeform poly shape
+- **Tree symbols**: Existing, Proposed, Evergreen, Shrub, Ornamental, Removing, New
+- **Dimension lines** with editable labels for annotating distances
+- **Free text** at any size and weight
+- **Plan chrome**: title block, notes list, auto-generated legend, north arrow, scale bar
+- **Export** to PNG (configurable DPI) or PDF (jsPDF, sized to canvas paper dimensions)
+- **File format**: `.siteplan` JSON files with autosave to localStorage between sessions
+- **Full undo/redo** via Zustand + zundo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting Started
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:5173](http://localhost:5173).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Build
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build   # outputs to dist/
+npm run preview # serve the production build locally
 ```
+
+### Tests
+
+```bash
+npm test
+```
+
+## Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `V` | Select tool |
+| `R` | Building area tool |
+| `T` | Existing tree tool |
+| `X` | Text tool |
+| `Escape` | Clear selection, switch to Select |
+| `Delete` / `Backspace` | Delete selected elements |
+| `Cmd/Ctrl + Z` | Undo |
+| `Cmd/Ctrl + Shift + Z` / `Y` | Redo |
+| `Cmd/Ctrl + D` | Duplicate selection |
+| `Cmd/Ctrl + S` | Save `.siteplan` file |
+| `Cmd/Ctrl + E` | Export PNG |
+| `Cmd/Ctrl + Shift + E` | Export PDF |
+| `Arrow keys` | Nudge selected 1 ft |
+| `Shift + Arrow keys` | Nudge selected 10 ft |
+| `]` / `[` | Bring forward / send back |
+
+## Project Structure
+
+```
+src/
+  canvas/          # SVG stage, element views, grid, interactions
+  chrome/          # Title block, legend, north arrow, scale bar, notes
+  fills/           # SVG fill pattern definitions and registry
+  io/              # Save, load, PNG export, PDF export, migrations
+  store/           # Zustand document and UI stores
+  toolbar/         # Toolbar, inspector panel, text overlay
+  trees/           # Tree symbol components and registry
+  types/           # TypeScript types for the document schema
+```
+
+## Document Format
+
+Plans are saved as `.siteplan` files (JSON, `schemaVersion: 2`). The schema is defined in [src/types/document.ts](src/types/document.ts) and versioned migrations live in [src/io/migrations.ts](src/io/migrations.ts).
+
+## Deployment
+
+Pushes to `main` automatically deploy to GitHub Pages via the workflow in [.github/workflows/deploy.yml](.github/workflows/deploy.yml).
